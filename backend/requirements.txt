@@ -1,0 +1,16 @@
+Pillow
+django-colorfield
+django-filter
+djangorestframework
+djangorestframework-simplejwt
+requests
+PyJWT
+pytest
+pytest-django
+pytest-pythonpath
+asgiref
+Django
+gunicorn
+psycopg2-binary
+pytz
+sqlparse
