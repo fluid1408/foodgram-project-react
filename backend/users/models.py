@@ -8,17 +8,20 @@ class User(AbstractUser):
     email = models.EmailField(
         max_length=settings.EMAIL_MAX_LENGTH,
         unique=True,
+        db_index=True,
         blank=False,
         null=False
     )
     first_name = models.CharField(
         'имя',
         max_length=settings.NAME_MAX_LENGTH,
+        db_index=True,
         blank=True
     )
     last_name = models.CharField(
         'фамилия',
         max_length=settings.NAME_MAX_LENGTH,
+        db_index=True,
         blank=True
     )
 

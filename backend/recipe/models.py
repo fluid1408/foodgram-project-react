@@ -1,10 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
 from django.core import validators
 from colorfield.fields import ColorField
+from users.models import User
 
-User = get_user_model()
 
 class Tag(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")

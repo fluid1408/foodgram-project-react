@@ -1,13 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
+from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
+                           Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
-from recipe.models import (
-    Recipe,
-    Tag,
-    Ingredients,
-    IngredientRecipe,
-    FavoriteRecipe,
-    ShoppingCart
-)
 from users.models import Follow, User
 
 
@@ -121,7 +115,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
-            IngredientRecipe.objects.create(
+            IngredientRecipe.objects.bulk_create(
                 recipe=recipe,
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'),

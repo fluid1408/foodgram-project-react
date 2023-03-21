@@ -1,62 +1,39 @@
+from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from django.conf import settings
-from rest_framework import generics, status, viewsets, permissions
-from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models.aggregates import Sum
 from django.http import HttpResponse
-from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, status, viewsets
+from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
+                           Recipe, ShoppingCart, Tag)
+from rest_framework import generics, mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
-from rest_framework.views import APIView
-from api.permissions import (
-    AuthorOrAdminOrReadOnly,
-    AdminOrReadOnly
-    )
-from rest_framework.permissions import(
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from users.models import Follow, User
 
 from .filters import RecipeFilter
 from .pagination import PaginationClass
+from .serializers import (FavoriteRecipeSerializer, FollowSerializer,
+                          IngredientsSerializer, RecipeReadSerializer,
+                          RecipeSerializer, ShoppingCartSerializer,
+                          ShowFollowSerializer, TagSerializer,
+                          UserMeSerializer, UserSerializer)
 
-from .serializers import (
-    RecipeSerializer,
-    RecipeReadSerializer,
-    ShowFollowSerializer,
-    TagSerializer,
-    IngredientsSerializer,
-    FavoriteRecipeSerializer,
-    ShoppingCartSerializer,
-    UserMeSerializer,
-    FollowSerializer,
-    UserSerializer,
-)
-
-from recipe.models import (
-    Recipe,
-    Tag,
-    Ingredients,
-    IngredientRecipe,
-    FavoriteRecipe,
-    ShoppingCart
-)
-from users.models import Follow, User
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all().order_by('id')
     serializer_class = TagSerializer
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (AdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
 
 class IngredientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all().order_by('id')
     serializer_class = IngredientsSerializer
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (AdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.select_related(
@@ -146,20 +123,19 @@ class AddDeleteShoppingCart(
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AuthorOrAdminOrReadOnly,)
+    permission_classes = (IsAuthorOrAdminOrReadOnly,)
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
-    http_method_names = ['get', 'post', 'patch', 'delete']
 
     @action(
         methods=['get', 'patch'],
         detail=False,
         url_path='me',
-#        permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticatedOrReadOnly,)
     )
     def get_patch_me(self, request):
-        user = get_object_or_404(User, username=self.request.user)
+        user = self.request.user
         if request.method == 'GET':
             serializer = UserMeSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -173,7 +149,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
-    permission_classes = (AdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
     http_method_names = ['get', 'post']
@@ -182,6 +158,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 class FollowApiView(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
     pagination_class = PaginationClass
+    
     def post(self, request, *args, **kwargs):
         if Follow.objects.filter(
             author=get_object_or_404(
