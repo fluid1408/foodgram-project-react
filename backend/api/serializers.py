@@ -1,7 +1,9 @@
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
                            Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from users.models import Follow, User
 
 
@@ -235,5 +237,11 @@ class UserMeSerializer(UserSerializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=['user', 'author']
+            )
+        ]
         model = Follow
         fields = ('user', 'author')

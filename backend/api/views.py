@@ -45,6 +45,25 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
 
+    @action(detail=False)
+    def download_shopping_cart(request):
+        ingredient_list = "Cписок покупок:"
+        ingredients = IngredientRecipe.objects.filter(
+            recipe__shopping_cart__user=request.user
+        ).order_by('ingredient__name').values(
+            'ingredient__name', 'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
+        for ingredient in ingredients:
+            ingredient_list += (
+                f"\n{ingredient['ingredient__name']} "
+                f"({ingredient['ingredient__measurement_unit']}) - "
+                f"{ingredient['amount']}"
+            )
+        file = 'shopping_list'
+        response = HttpResponse(ingredient_list, 'Content-Type: application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
+        return response
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeReadSerializer
@@ -207,23 +226,3 @@ class ListFollowViewSet(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return User.objects.filter(following__user=user)
-
-
-@api_view(['GET'])
-def download_shopping_cart(request):
-    ingredient_list = "Cписок покупок:"
-    ingredients = IngredientRecipe.objects.filter(
-        recipe__shopping_cart__user=request.user
-    ).order_by('ingredient__name').values(
-        'ingredient__name', 'ingredient__measurement_unit'
-    ).annotate(amount=Sum('amount'))
-    for ingredient in ingredients:
-        ingredient_list += (
-            f"\n{ingredient['ingredient__name']} "
-            f"({ingredient['ingredient__measurement_unit']}) - "
-            f"{ingredient['amount']}"
-        )
-    file = 'shopping_list'
-    response = HttpResponse(ingredient_list, 'Content-Type: application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
-    return response
