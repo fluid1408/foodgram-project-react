@@ -179,16 +179,6 @@ class FollowApiView(APIView):
     pagination_class = PaginationClass
     
     def post(self, request, *args, **kwargs):
-        if Follow.objects.filter(
-            author=get_object_or_404(
-                User, pk=kwargs.get('id', None)
-            ),
-            user=request.user
-        ).exists():
-            return Response(
-                {'errors': 'Вы уже подписаны на этого пользователя'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
         obj_follow = Follow(author=get_object_or_404(
                 User,
                 pk=kwargs.get('id', None)
