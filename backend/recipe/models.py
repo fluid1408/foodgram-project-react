@@ -1,5 +1,6 @@
-from django.db import models
 from django.core import validators
+from django.db import models
+
 from colorfield.fields import ColorField
 from users.models import User
 

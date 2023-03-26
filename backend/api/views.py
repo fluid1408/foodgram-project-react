@@ -1,16 +1,11 @@
-from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from django.db.models.aggregates import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+
+from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-from recipe.models import (
-    FavoriteRecipe,
-    IngredientRecipe,
-    Ingredients,
-    Recipe,
-    ShoppingCart,
-    Tag,
-)
+from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
+                           Recipe, ShoppingCart, Tag)
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -21,18 +16,11 @@ from users.models import Follow, User
 
 from .filters import RecipeFilter
 from .pagination import PaginationClass
-from .serializers import (
-    FavoriteRecipeSerializer,
-    FollowSerializer,
-    IngredientsSerializer,
-    RecipeReadSerializer,
-    RecipeSerializer,
-    ShoppingCartSerializer,
-    ShowFollowSerializer,
-    TagSerializer,
-    UserMeSerializer,
-    UserSerializer,
-)
+from .serializers import (FavoriteRecipeSerializer, FollowSerializer,
+                          IngredientsSerializer, RecipeReadSerializer,
+                          RecipeSerializer, ShoppingCartSerializer,
+                          ShowFollowSerializer, TagSerializer,
+                          UserMeSerializer, UserSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
