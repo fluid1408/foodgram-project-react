@@ -6,7 +6,7 @@ from users.models import User
 class RecipeFilter(filters.FilterSet):
     author = filters.ModelChoiceFilter(queryset=User.objects.all())
     is_in_shopping_cart = filters.BooleanFilter(
-        widget=filters.widgets.BooleanWidget(), label="В корзине!"
+        widget=filters.widgets.BooleanWidget(), label="В корзине."
     )
     is_favorited = filters.BooleanFilter(
         widget=filters.widgets.BooleanWidget(), label="В избранных."
