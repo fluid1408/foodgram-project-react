@@ -46,11 +46,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
 
     @action(detail=False)
-    def download_shopping_cart(request):
+    def download_shopping_cart(self):
         ingredient_list = "Cписок покупок:"
         ingredients = (
             IngredientRecipe.objects.filter(
-                recipe__shopping_cart__user=request.user
+                recipe__shopping_cart__user=self.user
             )
             .order_by("ingredient__name")
             .values("ingredient__name", "ingredient__measurement_unit")
