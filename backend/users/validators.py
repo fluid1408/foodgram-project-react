@@ -6,17 +6,17 @@ from django.core.exceptions import ValidationError
 
 
 def validate_username(value):
-    if value == 'me':
+    if value == "me":
         raise ValidationError(
-            ('Имя пользователя не может быть <me>.'),
+            ("Имя пользователя не может быть <me>."),
         )
-    uncorrect_chars = ''.join(
+    uncorrect_chars = "".join(
         set(re.findall(settings.UNCORRECT_USERNAME_CHARS, value))
     )
     if uncorrect_chars:
         raise ValidationError(
-            f'Не допустимые символы {uncorrect_chars} в нике.',
-            params={'chars': uncorrect_chars},
+            f"Не допустимые символы {uncorrect_chars} в нике.",
+            params={"chars": uncorrect_chars},
         )
     return value
 
@@ -25,6 +25,7 @@ def validate_year(year):
     today = dt.date.today()
     if year > today.year:
         raise ValidationError(
-            f'Указанный год {year} не может быть больше текущего '
-            f'{today.year}')
+            f"Указанный год {year} не может быть больше текущего "
+            f"{today.year}"
+        )
     return year

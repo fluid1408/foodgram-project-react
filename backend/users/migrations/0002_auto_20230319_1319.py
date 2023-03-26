@@ -5,29 +5,43 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='role',
+            model_name="user",
+            name="role",
         ),
         migrations.AlterField(
-            model_name='user',
-            name='first_name',
-            field=models.CharField(blank=True, max_length=200, verbose_name='имя'),
+            model_name="user",
+            name="first_name",
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name="имя"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='last_name',
-            field=models.CharField(blank=True, max_length=200, verbose_name='фамилия'),
+            model_name="user",
+            name="last_name",
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name="фамилия"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='username',
-            field=models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username'),
+            model_name="user",
+            name="username",
+            field=models.CharField(
+                error_messages={
+                    "unique": "A user with that username already exists."
+                },
+                help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                max_length=150,
+                unique=True,
+                validators=[
+                    django.contrib.auth.validators.UnicodeUsernameValidator()
+                ],
+                verbose_name="username",
+            ),
         ),
     ]

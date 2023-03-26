@@ -4,25 +4,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_auto_20230319_1319'),
+        ("users", "0002_auto_20230319_1319"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email',
-            field=models.EmailField(db_index=True, max_length=254, unique=True),
+            model_name="user",
+            name="email",
+            field=models.EmailField(
+                db_index=True, max_length=254, unique=True
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='first_name',
-            field=models.CharField(blank=True, db_index=True, max_length=200, verbose_name='имя'),
+            model_name="user",
+            name="first_name",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=200, verbose_name="имя"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='last_name',
-            field=models.CharField(blank=True, db_index=True, max_length=200, verbose_name='фамилия'),
+            model_name="user",
+            name="last_name",
+            field=models.CharField(
+                blank=True,
+                db_index=True,
+                max_length=200,
+                verbose_name="фамилия",
+            ),
         ),
     ]
