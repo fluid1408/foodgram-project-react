@@ -3,6 +3,7 @@ django-colorfield
 django-filter
 djangorestframework
 djangorestframework-simplejwt
+djoser
 requests
 PyJWT
 pytest
