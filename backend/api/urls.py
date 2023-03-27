@@ -20,6 +20,8 @@ urlpatterns = [
         AddDeleteFavoriteRecipe.as_view(),
         name="favorite_recipe",
     ),
+    path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     path(
         "recipes/<int:recipe_id>/shopping_cart/",
         AddDeleteShoppingCart.as_view(),

@@ -2,10 +2,34 @@ from drf_extra_fields.fields import Base64ImageField
 from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
                            Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.validators import UniqueTogetherValidator
 from users.models import Follow, User
 
 
+class UserLimitParamsSerializer(UserSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+        )
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'username',
+            'password',
+            'first_name',
+            'last_name',
+        )
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
