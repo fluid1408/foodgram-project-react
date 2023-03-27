@@ -13,7 +13,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "158.160.53.121",
     os.getenv("ALLOWED_HOSTS", default="string"),
 ]
 
