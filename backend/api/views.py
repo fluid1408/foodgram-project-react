@@ -28,6 +28,7 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     filter_backends = (DjangoFilterBackend,)
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
 
 
 class IngredientsViewSet(viewsets.ModelViewSet):
@@ -134,7 +135,7 @@ class AddDeleteShoppingCart(
         resipe_del.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+'''
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -158,7 +159,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+'''
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()

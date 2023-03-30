@@ -4,15 +4,14 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (AddDeleteFavoriteRecipe, AddDeleteShoppingCart,
                     FollowViewSet, IngredientsViewSet, RecipeViewSet,
-                    TagViewSet, UserViewSet)
+                    TagViewSet)
 
 router = DefaultRouter()
 
-router.register("users", UserViewSet, basename="user")
 router.register("follow", FollowViewSet, basename="follow")
 router.register("recipes", RecipeViewSet, basename="recipes")
 router.register("ingredients", IngredientsViewSet, basename="ingredients")
-router.register("tag", TagViewSet, basename="tag")
+router.register("tags", TagViewSet, basename="tags")
 
 urlpatterns = [
     path(

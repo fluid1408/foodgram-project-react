@@ -63,6 +63,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+'''
+DATABASES = {
     "default": {
         "ENGINE": os.getenv("DB_ENGINE"),
         "NAME": os.getenv("DB_NAME"),
@@ -72,7 +79,7 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
-
+'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -156,7 +163,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
+'''
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -171,7 +178,7 @@ REST_FRAMEWORK = {
     "PageNumberPagination",
     "PAGE_SIZE": 5,
 }
-
+'''
 
 EMAIL_MAX_LENGTH = 254
 USERNAME_MAX_LENGTH = 150

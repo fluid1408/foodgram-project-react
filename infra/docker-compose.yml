@@ -10,8 +10,10 @@ services:
       - ./.env
 
 
+
   backend:
-    image: schlyomin/foodgram-backend:latest
+    # image: schlyomin/foodgram-backend:latest     < -- в следующей строке правильный адрес образа на докерхабе
+    image: schlyomin/backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -23,16 +25,20 @@ services:
 
 
   frontend:
-    container_name: frontend
-    build:
-      context: ../frontend
+    # container_name: frontend     < -- это не мешает, но и пользы не приносит. Имя берется из предыд.строки
+    # в следующей строке правильный адрес образа на докерхабе
+    image: schlyomin/frontend:v.1.0
+    # build:                           < -- отключил сборку фронта из папок, пусть собирается из образа 
+    #   context: ../frontend          < -- это тоже не нужно, если собираем из образа
     volumes:
       - ../frontend/:/app/result_build/
+    # depends_on:
+    #   - backend
 
   nginx:
     image: nginx
     restart: always
-    container_name: nginx
+    # container_name: nginx   < -- не мешает, но и пользы не приносит. Имя берется из предыд.строки
     ports:
       - "80:80"
     volumes:
@@ -43,6 +49,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - backend
+      - frontend
 
 
 volumes:
