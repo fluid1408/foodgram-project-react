@@ -19,14 +19,14 @@ from .pagination import PaginationClass
 from .serializers import (FavoriteRecipeSerializer, FollowSerializer,
                           IngredientsSerializer, RecipeReadSerializer,
                           RecipeSerializer, ShoppingCartSerializer,
-                          ShowFollowSerializer, TagSerializer,
+                          FollowSerializer, TagSerializer,
                           UserMeSerializer, UserSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all().order_by("id")
+    queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    filter_backends = (DjangoFilterBackend,)
+    #filter_backends = (DjangoFilterBackend,)
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = None
 
@@ -134,7 +134,6 @@ class AddDeleteShoppingCart(
         resipe_del = ShoppingCart.objects.filter(recipe=self.get_object())
         resipe_del.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 '''
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -160,7 +159,6 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 '''
-
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
@@ -183,7 +181,7 @@ class FollowApiView(APIView):
         )
         obj_follow.save()
 
-        serializer = ShowFollowSerializer(
+        serializer = FollowSerializer(
             get_object_or_404(User, pk=kwargs.get("id", None)),
             context={"request": request},
         )
@@ -202,7 +200,7 @@ class ListFollowViewSet(generics.ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    serializer_class = ShowFollowSerializer
+    serializer_class = FollowSerializer
     pagination_class = PaginationClass
 
     def get_queryset(self):

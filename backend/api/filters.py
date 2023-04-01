@@ -1,5 +1,5 @@
 import django_filters as filters
-from recipe.models import Recipe
+from recipe.models import Recipe, Tag
 from users.models import User
 
 
@@ -8,13 +8,15 @@ class RecipeFilter(filters.FilterSet):
     is_in_shopping_cart = filters.BooleanFilter(
         widget=filters.widgets.BooleanWidget(), label="В корзине!"
     )
-    is_favorited = filters.BooleanFilter(
+    favorites_recipe = filters.BooleanFilter(
         widget=filters.widgets.BooleanWidget(), label="В избранных."
     )
-    tags = filters.AllValuesMultipleFilter(
-        field_name="tags__slug", label="Ссылка"
+    tags = filters.ModelMultipleChoiceFilter(
+        queryset = Tag.objects.all(),
+        field_name = 'tags_slug',
+        to_field_name = 'slug'
     )
 
     class Meta:
         model = Recipe
-        fields = ["is_favorited", "is_in_shopping_cart", "author", "tags"]
+        fields = ["favorites_recipe", "is_in_shopping_cart", "author", "tags"]

@@ -6,10 +6,17 @@ from users.models import User
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Название")
-    colorcode = ColorField(unique=True)
+    name = models.CharField(max_length=200, verbose_name="Название")
+    color = ColorField(unique=True)
     slug = models.SlugField(unique=True, verbose_name="Идентификатор")
 
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+        ordering = ['id']
+
+    def __str__(self):
+        return self.name
 
 class Ingredients(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")
