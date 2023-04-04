@@ -59,12 +59,10 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
 
-class IngredientsSerializer(serializers.ModelSerializer):
+class IngredientsSerializer(ModelSerializer):
     class Meta:
         model = Ingredients
-        exclude = ("id",)
-        lookup_field = "slug"
-        extra_kwargs = {"url": {"lookup_field": "slug"}}
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
@@ -164,12 +162,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         ).data
 
 
-class IngredientRecipeSerializer(serializers.ModelSerializer):
-    class Meta:
-        exclude = ("id",)
-        model = IngredientRecipe
-        lookup_field = "slug"
+class IngredientRecipeSerializer(ModelSerializer):
+    id = ReadOnlyField(source='ingredient.id')
+    name = ReadOnlyField(source='ingredient.name')
+    measurement_unit = ReadOnlyField(source='ingredient.measurement_unit')
 
+    class Meta:
+        model = IngredientRecipe
+        fields = ('id', 'name', 'measurement_unit', 'amount')
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
     class Meta:

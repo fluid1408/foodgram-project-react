@@ -103,7 +103,7 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    #"LOGIN_FIELD": "email",
+    "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
     "SERIALIZERS": {
         "user_create": "api.serializers.UserSerializer",

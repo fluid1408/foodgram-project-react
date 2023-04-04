@@ -19,8 +19,28 @@ class Tag(models.Model):
         return self.name
 
 class Ingredients(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Название")
-    measurement = models.IntegerField(verbose_name="Измерение")
+    name = models.CharField(
+        'Ингредиент',
+        max_length=200
+    )
+    measurement_unit = models.CharField(
+        'Ед.изм',
+        max_length=10
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        ordering = ['id']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='unique_name_measurement_unit'
+            )
+        ]
+
+    def __str__(self):
+        return self.name
 
 
 class Recipe(models.Model):
@@ -30,22 +50,54 @@ class Recipe(models.Model):
         related_name="author",
         verbose_name="автор",
     )
-    title = models.CharField(max_length=200, verbose_name="Название")
+    name = models.CharField(max_length=200, verbose_name="Название")
     image = models.ImageField(
         "Картинка", upload_to="static/recipe/", blank=True
     )
-    description = models.TextField(verbose_name="Описание")
+    text = models.TextField(verbose_name="Описание")
     ingredients = models.ManyToManyField(
         Ingredients,
         related_name="recipe",
+        through='IngredientRecipe',
         verbose_name="ингредиенты",
     )
     tags = models.ManyToManyField(
         Tag,
         related_name="recipe",
+        through='TagRecipe',
         verbose_name="Тег",
     )
-    time = models.DateTimeField(verbose_name="Время приготовления")
+    cooking_time = models.DateTimeField(verbose_name="Время приготовления")
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
+
+    class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+        ordering = ['-pub_date']
+
+    def __str__(self):
+        return self.name
+
+class TagRecipe(models.Model):
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['tag', 'recipe'],
+                name='unique_tag_recipe'
+            )
+        ]
 
 
 class IngredientRecipe(models.Model):

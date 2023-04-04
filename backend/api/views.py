@@ -1,6 +1,7 @@
 from django.db.models.aggregates import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from api.filters import IngredientFilter
 
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,6 +13,8 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import (GenericViewSet, ModelViewSet,
+                                     ReadOnlyModelViewSet)
 from users.models import Follow, User
 
 from .filters import RecipeFilter
@@ -26,16 +29,17 @@ from .serializers import (FavoriteRecipeSerializer, FollowSerializer,
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    #filter_backends = (DjangoFilterBackend,)
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = None
 
 
-class IngredientsViewSet(viewsets.ModelViewSet):
-    queryset = Ingredients.objects.all().order_by("id")
+class IngredientViewSet(ReadOnlyModelViewSet):
+    queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
-    filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
+    permission_classes = [AllowAny]
+    filter_backends = (DjangoFilterBackend, IngredientFilter)
+    search_fields = ('^name',)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
