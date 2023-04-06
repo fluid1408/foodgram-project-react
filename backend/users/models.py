@@ -1,59 +1,81 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 
 
 class User(AbstractUser):
-    email = models.EmailField(
-        max_length=settings.EMAIL_MAX_LENGTH,
+    username = models.CharField(
+        'Юзернейм',
+        max_length=150,
         unique=True,
-        db_index=True,
-        blank=False,
-        null=False,
+        validators=[
+            RegexValidator(
+                regex=r"^[\w.@+-]+$",
+                message="Недопустимый username",
+            )
+        ],
+    )
+    email = models.EmailField(
+        'Email',
+        max_length=254,
+        unique=True
+    )
+    password = models.CharField(
+        'Пароль',
+        max_length=150
     )
     first_name = models.CharField(
-        "имя", max_length=settings.NAME_MAX_LENGTH, db_index=True, blank=True
+        'Имя',
+        max_length=150
     )
     last_name = models.CharField(
-        "фамилия",
-        max_length=settings.NAME_MAX_LENGTH,
-        db_index=True,
-        blank=True,
+        'Фамилия',
+        max_length=150
+    )
+    is_staff = models.BooleanField(
+        'Админ',
+        default=False
     )
 
-    def __str__(self):
-        return self.username
-
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN or self.is_staff
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username', 'password', 'first_name', 'last_name')
 
     class Meta:
-        ordering = ("username",)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ['-id']
+
 
 
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="follower",
-        verbose_name="пользователь",
+        related_name='subscriber',
+        verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="following",
-        verbose_name="автор",
+        related_name='author',
+        verbose_name='Автор'
+    )
+    add_date = models.DateTimeField(
+        'Дата подписки',
+        auto_now_add=True
     )
 
     class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        ordering = ['-add_date']
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "author"], name="unique_following"
+                fields=['user', 'author'],
+                name='unique_subscribe'
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F("author")),
+                name="user is not author"
             )
         ]
-        verbose_name = "Подписка"
-        verbose_name_plural = "Подписки"
-
-    def str(self):
-        return f"{self.user.username}-{self.author.username}"

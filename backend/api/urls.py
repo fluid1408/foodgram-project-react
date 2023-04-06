@@ -1,31 +1,45 @@
-from django.urls import include, path
-
+from django.urls import include, path, re_path
 from rest_framework.routers import DefaultRouter
 
-from .views import (AddDeleteFavoriteRecipe, AddDeleteShoppingCart,
-                    FollowViewSet, IngredientViewSet, RecipeViewSet,
-                    TagViewSet,)
+from api.views import (DownloadShoppingCartViewSet, FavoriteViewSet,
+                       IngredientViewSet, RecipeViewSet, ShoppingCartViewSet,
+                       FollowViewSet, TagViewSet, UserViewSet)
+
 
 router = DefaultRouter()
 
-#router.register("users", UserViewSet, basename="users")
-router.register("follow", FollowViewSet, basename="follow")
-router.register("recipes", RecipeViewSet, basename="recipes")
-router.register("ingredients", IngredientViewSet, basename="ingredients")
-router.register("tags", TagViewSet, basename="tag")
+router.register('users', UserViewSet, basename='users')
+router.register('ingredients', IngredientViewSet, basename='ingredients')
+router.register('tags', TagViewSet, basename='tags')
+router.register('recipes', RecipeViewSet, basename='recipes')
 
 urlpatterns = [
     path(
-        "recipes/<int:recipe_id>/favorite/",
-        AddDeleteFavoriteRecipe.as_view(),
-        name="favorite_recipe",
+        'users/subscriptions/',
+        FollowViewSet.as_view({'get': 'list'}),
+        name='subscriptions'
+    ),
+    re_path(
+        r'recipes/(?P<recipe_id>\d+)/favorite/',
+        FavoriteViewSet.as_view({'post': 'create', 'delete': 'delete'}),
+        name='favorites'
+    ),
+    re_path(
+        r'recipes/(?P<recipe_id>\d+)/shopping_cart/',
+        ShoppingCartViewSet.as_view({'post': 'create', 'delete': 'delete'}),
+        name='shopping_cart'
+    ),
+    path(
+        'recipes/download_shopping_cart/',
+        DownloadShoppingCartViewSet.as_view(),
+        name='download'
+    ),
+    re_path(
+        r'users/(?P<author_id>\d+)/subscribe/',
+        FollowViewSet.as_view({'post': 'create', 'delete': 'delete'}),
+        name='subscribe'
     ),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    path(
-        "recipes/<int:recipe_id>/shopping_cart/",
-        AddDeleteShoppingCart.as_view(),
-        name="shopping_cart",
-    ),
-    path("", include(router.urls)),
+    path('', include(router.urls)),
 ]
