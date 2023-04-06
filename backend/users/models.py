@@ -46,7 +46,6 @@ class User(AbstractUser):
         ordering = ['-id']
 
 
-
 class Follow(models.Model):
     user = models.ForeignKey(
         User,

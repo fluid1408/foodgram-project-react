@@ -1,15 +1,15 @@
 from base64 import b64decode
 
 from django.core.files.base import ContentFile
+
 from djoser.serializers import UserSerializer
+from recipe.models import (FavoriteRecipe, IngredientRecipe, Ingredients,
+                           Recipe, ShoppingCart, Tag)
 from rest_framework.serializers import (ImageField, IntegerField,
                                         ModelSerializer,
                                         PrimaryKeyRelatedField, ReadOnlyField,
                                         SerializerMethodField, ValidationError)
-
-from recipe.models import (FavoriteRecipe, Ingredients, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
-from users.models import User, Follow
+from users.models import Follow, User
 
 
 class Base64ImageField(ImageField):
