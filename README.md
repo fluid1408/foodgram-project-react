@@ -2,7 +2,7 @@
 
 Данные для входа в админку:
 
-email: a@mail.ru
+email: admin@fake.com
 
 пароль: admin
 
