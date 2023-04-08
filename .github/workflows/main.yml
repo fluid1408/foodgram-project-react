@@ -74,6 +74,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }} # Если ваш ssh-ключ защищён фразой-паролем
           script: |
             sudo docker compose stop
+            sudo docker compose pull
             sudo docker compose rm -f
             sudo docker image prune -af
             cd ~/Dev/foodgram-project-react/infra
