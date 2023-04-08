@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from recipe.models import Ingredient
+from recipe.models import Ingredients
 
 DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
@@ -24,8 +24,8 @@ class Command(BaseCommand):
                 encoding='utf8'
             ) as csv_file:
                 data = csv.reader(csv_file)
-                Ingredient.objects.bulk_create(
-                    (Ingredient(
+                Ingredients.objects.bulk_create(
+                    (Ingredients(
                         name=row[0],
                         measurement_unit=row[1])
                         for row in data),
